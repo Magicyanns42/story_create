@@ -1,0 +1,13 @@
+{
+  "name": "Story Maker",
+  "short_name": "Story Maker",
+  "description": "Crée des montages photo pour Instagram Stories",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#101820",
+  "theme_color": "#101820",
+  "lang": "fr",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101820">
+  <meta name="description" content="Crée un montage photo pour Instagram Stories">
+  <title>Story Maker</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div>
+      <p class="eyebrow">MONTAGE PHOTO</p>
+      <h1>Story Maker</h1>
+      <p class="subtitle">Assemble tes photos. Partage ton moment.</p>
+    </div>
+    <button id="install-button" class="icon-button" type="button" hidden aria-label="Installer l’application">＋</button>
+  </header>
+
+  <main>
+    <section class="preview-section" aria-label="Aperçu du montage">
+      <div class="preview-frame" id="preview-frame">
+        <div class="empty-preview" id="empty-preview">
+          <span class="preview-icon">✦</span>
+          <strong>Ton montage apparaîtra ici</strong>
+          <span>Format Instagram Story · 9:16</span>
+        </div>
+        <div class="story-grid" id="story-grid" hidden></div>
+      </div>
+      <p class="preview-caption" id="preview-caption">Ajoute au moins une photo pour commencer</p>
+    </section>
+
+    <section class="controls" aria-label="Actions">
+      <label class="primary-action">
+        <span>＋</span>
+        <span>Ajouter des photos</span>
+        <input id="photo-input" type="file" accept="image/*" multiple>
+      </label>
+      <button id="export-button" class="secondary-action" type="button" disabled>
+        <span>↗</span>
+        <span>Exporter la story</span>
+      </button>
+    </section>
+
+    <section id="gallery-section" class="gallery-section" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">ÉTAPE 2</p>
+          <h2>Tes photos</h2>
+        </div>
+        <span class="photo-count" id="photo-count">0</span>
+      </div>
+      <p class="hint">Touche une photo pour la mettre en avant. Supprime celles que tu ne veux pas garder.</p>
+      <div class="photo-list" id="photo-list"></div>
+    </section>
+
+    <section id="editor-section" class="editor-section" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">ÉTAPE 3</p>
+          <h2>Personnalise</h2>
+        </div>
+      </div>
+      <div class="editor-grid">
+        <label>Modèle
+          <select id="template-select">
+            <option value="grid">Grille équilibrée</option>
+            <option value="focus">Photo principale</option>
+            <option value="strip">Bande verticale</option>
+          </select>
+        </label>
+        <label>Filtre
+          <select id="filter-select">
+            <option value="none">Original</option>
+            <option value="soft">Doux</option>
+            <option value="mono">Noir et blanc</option>
+            <option value="warm">Chaleureux</option>
+            <option value="vivid">Vif</option>
+          </select>
+        </label>
+        <label class="full-field">Texte sur la story
+          <input id="text-input" type="text" maxlength="48" placeholder="Ex. Week-end entre amis">
+        </label>
+        <div class="full-field">
+          <span class="field-label">Sticker</span>
+          <div class="sticker-row">
+            <button type="button" class="sticker-button" data-sticker="">Aucun</button>
+            <button type="button" class="sticker-button" data-sticker="✨">✨</button>
+            <button type="button" class="sticker-button" data-sticker="❤️">❤️</button>
+            <button type="button" class="sticker-button" data-sticker="☀️">☀️</button>
+            <button type="button" class="sticker-button" data-sticker="📍">📍</button>
+          </div>
+        </div>
+        <label class="full-field">Recadrage de la photo sélectionnée
+          <span class="range-title">Horizontal</span>
+          <input id="crop-range-x" type="range" min="0" max="100" value="50">
+          <span class="range-title">Vertical</span>
+          <input id="crop-range-y" type="range" min="0" max="100" value="50">
+          <span class="range-note">Le cadrage s’applique à la photo sélectionnée.</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="tip">
+      <span>◎</span>
+      <p>Les images restent sur ton téléphone. Rien n’est envoyé en ligne.</p>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
