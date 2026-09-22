@@ -1,4 +1,4 @@
-const CACHE = 'story-maker-v1';
+const CACHE = 'story-maker-v2';
 const FILES = ['./', './index.html', './style.css', './app.js', './manifest.json', './icon.svg'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES))));
 self.addEventListener('activate', event => event.waitUntil(self.clients.claim()));

@@ -197,10 +197,10 @@
 
   function drawMontage(canvas, images) {
     const context = canvas.getContext('2d');
-    context.fillStyle = '#101820';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    drawTemplateBackground(context, canvas.width, canvas.height);
     const cells = getCells(images.length, canvas.width, canvas.height);
     images.forEach((image, index) => drawCroppedImage(context, image, cells[index], photos[index]));
+    drawTemplateFrames(context, cells);
     context.filter = 'none';
     context.fillStyle = '#ffffff';
     context.textAlign = 'center';
@@ -219,7 +219,7 @@
   }
 
   function getCells(length, width, height) {
-    if (template === 'strip' || length === 1) {
+    if (template === 'strip' || template === 'film' || length === 1) {
       return Array.from({ length }, (_, index) => ({ x: 0, y: index * height / length, width, height: height / length }));
     }
     if (template === 'focus') {
@@ -231,14 +231,64 @@
         height: height - mainHeight,
       }))];
     }
+    if (template === 'magazine') {
+      const mainHeight = height * .58;
+      return [{ x: 0, y: 0, width, height: mainHeight }, ...Array.from({ length: length - 1 }, (_, index) => ({
+        x: index % 2 * width / 2,
+        y: mainHeight,
+        width: width / 2,
+        height: height - mainHeight,
+      }))];
+    }
+    const inset = ['album', 'notebook', 'polaroid', 'scrapbook', 'postcard'].includes(template) ? width * .08 : 0;
+    const contentWidth = width - inset * 2;
+    const contentHeight = height - inset * 2;
     const columns = 2;
     const rows = Math.ceil(length / columns);
     return Array.from({ length }, (_, index) => ({
-      x: index % columns * width / columns,
-      y: Math.floor(index / columns) * height / rows,
-      width: width / columns,
-      height: height / rows,
+      x: inset + index % columns * contentWidth / columns,
+      y: inset + Math.floor(index / columns) * contentHeight / rows,
+      width: contentWidth / columns,
+      height: contentHeight / rows,
     }));
+  }
+
+  function drawTemplateBackground(context, width, height) {
+    const colors = { album: '#e8ddc8', notebook: '#f5efd9', polaroid: '#d6c7b4', film: '#111111', scrapbook: '#cebba0', magazine: '#ec5d42', postcard: '#f0e5c8' };
+    context.fillStyle = colors[template] || '#101820';
+    context.fillRect(0, 0, width, height);
+    if (template === 'notebook') {
+      context.strokeStyle = '#bbd4dd';
+      context.lineWidth = 3;
+      for (let y = 80; y < height; y += 80) { context.beginPath(); context.moveTo(0, y); context.lineTo(width, y); context.stroke(); }
+    }
+    if (template === 'film') {
+      context.fillStyle = '#d9d0b3';
+      for (let y = 50; y < height; y += 105) context.fillRect(55, y, 26, 26);
+      for (let y = 50; y < height; y += 105) context.fillRect(width - 81, y, 26, 26);
+    }
+  }
+
+  function drawTemplateFrames(context, cells) {
+    context.save();
+    cells.forEach((cell, index) => {
+      if (template === 'album' || template === 'polaroid' || template === 'scrapbook') {
+        context.strokeStyle = template === 'scrapbook' ? '#f6ecd7' : '#ffffff';
+        context.lineWidth = template === 'polaroid' ? 24 : 18;
+        context.strokeRect(cell.x, cell.y, cell.width, cell.height);
+      }
+      if (template === 'postcard') {
+        context.strokeStyle = '#385c62';
+        context.lineWidth = 8;
+        context.strokeRect(cell.x, cell.y, cell.width, cell.height);
+      }
+      if (template === 'magazine' && index === 0) {
+        context.strokeStyle = '#ec5d42';
+        context.lineWidth = 12;
+        context.strokeRect(cell.x, cell.y, cell.width, cell.height);
+      }
+    });
+    context.restore();
   }
 
   function drawCroppedImage(context, image, cell, photo) {
